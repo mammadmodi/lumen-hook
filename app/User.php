@@ -10,6 +10,14 @@ use Laravel\Lumen\Auth\Authorizable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
+/**
+ * Class User
+ * @package App
+ * @property int id
+ * @property string name
+ * @property string email
+ * @property string created_at
+ */
 class User extends Model implements JWTSubject, AuthenticatableContract, AuthorizableContract
 {
     use Authenticatable, Authorizable;
