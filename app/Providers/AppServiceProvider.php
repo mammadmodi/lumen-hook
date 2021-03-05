@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\Users\SqlUserRepository;
+use App\Repositories\Users\UserRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,6 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(UserRepositoryInterface::class, function () {
+            return new SqlUserRepository();
+        });
     }
 }
