@@ -29,6 +29,7 @@ class AuthController extends Controller
     {
         $this->userRepository = $userRepository;
         $this->middleware('auth:api', ['except' => ['login', 'register', "verify"]]);
+        $this->middleware('verify', ['only' => ['me']]);
     }
 
     /**
