@@ -16,10 +16,28 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property int id
  * @property string name
  * @property string email
+ * @property string phone_number
+ * @property string password
+ * @property integer activation_code
+ * @property string status
  * @property string created_at
  */
 class User extends Model implements JWTSubject, AuthenticatableContract, AuthorizableContract
 {
+    const STATUS_REGISTERED = "registered";
+    const STATUS_VERIFIED = "verified";
+    const STATUS_BANNED = "banned";
+
+    /**
+     * Returns all available states.
+     *
+     * @return array
+     */
+    public static function getStates()
+    {
+        return [self::STATUS_VERIFIED, self::STATUS_REGISTERED, self::STATUS_BANNED];
+    }
+
     use Authenticatable, Authorizable;
 
     /**
@@ -28,7 +46,7 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
      * @var array
      */
     protected $fillable = [
-        'name', 'email',
+        'name', 'email', 'phone_number',
     ];
 
     /**
