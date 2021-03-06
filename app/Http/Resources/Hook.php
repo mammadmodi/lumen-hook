@@ -20,6 +20,7 @@ class Hook extends JsonResource
 
         return [
             'id' => $hook->id,
+            'url' => $hook->url,
             'cron' => $hook->cron,
             'threshold' => $hook->threshold,
             'created_at' => $hook->created_at,
