@@ -49,4 +49,17 @@ class SqlHookRepository implements HookRepositoryInterface
 
         return $hookErrors;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findHookErrorById($hookErrorId)
+    {
+        /** @var HookError $hookError */
+        $hookError = HookError::with("hook")
+            ->where('id', '=', $hookErrorId)
+            ->first();
+
+        return $hookError;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Repositories\Hooks;
 
 use App\Hook;
+use App\HookError;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -35,4 +36,12 @@ interface HookRepositoryInterface
      * @return Collection
      */
     public function getHookErrors(Hook $hook, $perPage = 10, $page = 1);
+
+    /**
+     * Finds hook error by it's id.
+     *
+     * @param $hookErrorId
+     * @return HookError
+     */
+    public function findHookErrorById($hookErrorId);
 }
