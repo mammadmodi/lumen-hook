@@ -3,6 +3,7 @@
 namespace App\Repositories\Hooks;
 
 use App\Hook;
+use App\HookError;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -25,10 +26,7 @@ class SqlHookRepository implements HookRepositoryInterface
     }
 
     /**
-     * Finds Hooks of entry id.
-     *
-     * @param int $id
-     * @return Hook
+     * @inheritDoc
      */
     public function findById($id)
     {
@@ -37,5 +35,18 @@ class SqlHookRepository implements HookRepositoryInterface
             ->first();
 
         return $hook;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getHookErrors(Hook $hook, $perPage = 10, $page = 1)
+    {
+        $hookErrors = HookError::where('hook_id', '=', $hook->id)
+            ->orderBy('id', 'DESC')
+            ->paginate($perPage, ['*'], 'page', $page)
+            ->all();
+
+        return $hookErrors;
     }
 }

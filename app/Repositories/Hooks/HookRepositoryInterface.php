@@ -25,4 +25,14 @@ interface HookRepositoryInterface
      * @return Hook
      */
     public function findById($id);
+
+    /**
+     * Returns errors related to entry hook.
+     *
+     * @param Hook $hook
+     * @param int $perPage
+     * @param int $page
+     * @return Collection
+     */
+    public function getHookErrors(Hook $hook, $perPage = 10, $page = 1);
 }
