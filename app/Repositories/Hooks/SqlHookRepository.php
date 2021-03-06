@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Hooks;
 
+use App\Hook;
 use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -21,5 +22,20 @@ class SqlHookRepository implements HookRepositoryInterface
         $hooks = Collection::make($hooks);
 
         return $hooks;
+    }
+
+    /**
+     * Finds Hooks of entry id.
+     *
+     * @param int $id
+     * @return Hook
+     */
+    public function findById($id)
+    {
+        /** @var Hook $hook */
+        $hook = Hook::where('id', '=', $id)
+            ->first();
+
+        return $hook;
     }
 }
