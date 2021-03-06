@@ -44,7 +44,7 @@ class HookJob extends Job
     {
         for ($i = 1; $i <= $this->hook->threshold; $i++) {
             try {
-                $response = $this->httpClient->post($this->hook->url);
+                $response = $this->httpClient->get($this->hook->url);
             } catch (GuzzleException $exception) {
                 if ($i == $this->hook->threshold) {
                     $this->reportHookError($exception->getCode(), $exception->getMessage());
