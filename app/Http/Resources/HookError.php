@@ -23,6 +23,7 @@ class HookError extends JsonResource
             'status_code' => $hookError->status_code,
             'response_body' => $hookError->response_body,
             'created_at' => $hookError->created_at,
+            'updated_at' => $hookError->updated_at,
         ];
     }
 }

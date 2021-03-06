@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int $hook_id
  * @property string $deleted_at
  * @property string $created_at
+ * @property string $updated_at
  * @property Hook $hook
  */
 class HookError extends Model
