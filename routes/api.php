@@ -32,5 +32,6 @@ $router->group([
         $router->get('', ['as' => 'index', 'uses' => 'HookController@index']);
         $router->post('', ['as' => 'store', 'uses' => 'HookController@store']);
         $router->patch('/{id}', ['as' => 'update', 'uses' => 'HookController@update']);
+        $router->delete('/{id}', ['as' => 'delete', 'uses' => 'HookController@delete']);
     });
 });

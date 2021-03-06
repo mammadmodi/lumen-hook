@@ -6,6 +6,7 @@ use App\Hook;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Repositories\Hooks\HookRepositoryInterface;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -119,6 +120,35 @@ class HookController extends Controller
         }
 
         // TODO reschedule cron for updated hook
+
+        return response('', 204);
+    }
+
+    /**
+     * Removes an exist hook.
+     *
+     * @param int $id
+     * @return Response
+     * @throws Exception
+     */
+    public function delete(int $id)
+    {
+        $hook = $this->hookRepository->findById($id);
+        if (empty($hook)) {
+            return response()->json(["error" => "hook not found"], 404);
+        }
+
+        if (auth()->user()->id != $hook->user_id) {
+            return response()->json(["error" => "you can only update your hooks"], 403);
+        }
+
+        try {
+            $hook->delete();
+        } catch (Exception $exception) {
+            return response()->json(["error" => "could not remove hook"], 500);
+        }
+
+        // TODO remove hook from scheduler
 
         return response('', 204);
     }
