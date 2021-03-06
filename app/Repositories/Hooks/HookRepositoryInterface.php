@@ -15,5 +15,5 @@ interface HookRepositoryInterface
      * @param int $page
      * @return Collection
      */
-    public function findByPhoneNumber(User $user, $perPage = 10, $page = 1);
+    public function findByUser(User $user, $perPage = 10, $page = 1);
 }

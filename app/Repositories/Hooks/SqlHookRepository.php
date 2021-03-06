@@ -11,7 +11,7 @@ class SqlHookRepository implements HookRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function findByPhoneNumber(User $user, $perPage = 10, $page = 1)
+    public function findByUser(User $user, $perPage = 10, $page = 1)
     {
         $hooks = DB::table('hooks')
             ->where('user_id', '=', $user->id)
