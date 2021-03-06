@@ -170,12 +170,39 @@ class HookController extends Controller
         }
 
         if (auth()->user()->id != $hook->user_id) {
-            return response()->json(["error" => "you can only update your hooks"], 403);
+            return response()->json(["error" => "you can view only errors of your hooks"], 403);
         }
 
         $page = (int)$request->get('page') ?? 1;
         $hookErrors = $this->hookRepository->getHookErrors($hook, 10, $page);
 
         return HookError::collection($hookErrors);
+    }
+
+    /**
+     * Tries to delete error from a hook errors.
+     *
+     * @param int $id
+     * @param int $errorId
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function deleteError(int $id, int $errorId)
+    {
+        $hookError = $this->hookRepository->findHookErrorById($errorId);
+        if (empty($hookError)) {
+            return response()->json(["error" => "hook error not found"], 404);
+        }
+
+        if ($hookError->hook_id != $id || auth()->user()->id != $hookError->hook->user_id) {
+            return response()->json(["error" => "you can delete only errors of your hooks"], 403);
+        }
+
+        try {
+            $hookError->delete();
+        } catch (Exception $exception) {
+            return response()->json(["error" => "could not remove hook error"], 500);
+        }
+
+        return response('', 204);
     }
 }

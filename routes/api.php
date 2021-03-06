@@ -34,5 +34,6 @@ $router->group([
         $router->patch('/{id}', ['as' => 'update', 'uses' => 'HookController@update']);
         $router->delete('/{id}', ['as' => 'delete', 'uses' => 'HookController@delete']);
         $router->get('{id}/errors', ['as' => 'errors', 'uses' => 'HookController@errors']);
+        $router->delete('{id}/errors/{errorId}', ['as' => 'deleteError', 'uses' => 'HookController@deleteError']);
     });
 });
