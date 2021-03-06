@@ -15,9 +15,9 @@ class HookJob extends Job
     private $hook;
 
     /**
-     * @var Client
+     * @var integer
      */
-    private $httpClient;
+    private $timeout;
 
     /**
      * @var integer
@@ -31,10 +31,8 @@ class HookJob extends Job
     public function __construct(Hook $hook)
     {
         $this->hook = $hook;
+        $this->timeout = config("hook.timeout");
         $this->retryDelay = config("hook.retryDelay");
-        $this->httpClient = new Client([
-            'timeout' => config("hook.timeout"),
-        ]);
     }
 
     /**
@@ -42,9 +40,13 @@ class HookJob extends Job
      */
     public function handle()
     {
+        $httpClient = new Client([
+            'timeout' => $this->timeout,
+        ]);
+
         for ($i = 1; $i <= $this->hook->threshold; $i++) {
             try {
-                $response = $this->httpClient->get($this->hook->url);
+                $response = $httpClient->get($this->hook->url);
             } catch (GuzzleException $exception) {
                 if ($i == $this->hook->threshold) {
                     $this->reportHookError($exception->getCode(), $exception->getMessage());
