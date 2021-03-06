@@ -17,8 +17,7 @@ class Hook extends JsonResource
     {
         /** @var \App\Hook $hook */
         $hook = $this;
-
-        return [
+        $hookArray = [
             'id' => $hook->id,
             'url' => $hook->url,
             'cron' => $hook->cron,
@@ -26,5 +25,11 @@ class Hook extends JsonResource
             'created_at' => $hook->created_at,
             'updated_at' => $hook->updated_at,
         ];
+
+        if ($hook->deleted_at != null) {
+            $hookArray = array_merge($hookArray, ['deleted_at' => $hook->deleted_at,]);
+        }
+
+        return $hookArray;
     }
 }

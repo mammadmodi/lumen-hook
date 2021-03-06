@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Hook
@@ -14,12 +15,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $url
  * @property string $cron
  * @property integer $threshold
- * @property string created_at
+ * @property string $deleted_at
+ * @property string $created_at
  * @property string $updated_at
  * @property User $user
  */
 class Hook extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'url',
         'cron',
