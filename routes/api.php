@@ -30,5 +30,6 @@ $router->group([
         'middleware' => ['auth:api', 'verify']
     ], function (Router $router) {
         $router->get('', ['as' => 'index', 'uses' => 'HookController@index']);
+        $router->post('', ['as' => 'store', 'uses' => 'HookController@store']);
     });
 });
