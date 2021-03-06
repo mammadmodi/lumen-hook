@@ -6,7 +6,9 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Lumen\Auth\Authorizable;
+use Illuminate\Database\Eloquent\Collection;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 
@@ -21,6 +23,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property integer activation_code
  * @property string status
  * @property string created_at
+ * @property Collection $hooks
  */
 class User extends Model implements JWTSubject, AuthenticatableContract, AuthorizableContract
 {
@@ -72,5 +75,15 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Returns hooks that assigned to user.
+     *
+     * @return HasMany
+     */
+    public function hooks()
+    {
+        return $this->hasMany(Hook::class);
     }
 }
