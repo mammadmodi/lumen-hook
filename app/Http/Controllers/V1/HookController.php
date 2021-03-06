@@ -4,9 +4,11 @@ namespace App\Http\Controllers\V1;
 
 use App\Hook;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HookError;
 use App\User;
 use App\Repositories\Hooks\HookRepositoryInterface;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -151,5 +153,29 @@ class HookController extends Controller
         // TODO remove hook from scheduler
 
         return response('', 204);
+    }
+
+    /**
+     * Returns errors related to entry hook id.
+     *
+     * @param int $id
+     * @param Request $request
+     * @return JsonResponse|AnonymousResourceCollection
+     */
+    public function errors(int $id, Request $request)
+    {
+        $hook = $this->hookRepository->findById($id);
+        if (empty($hook)) {
+            return response()->json(["error" => "hook not found"], 404);
+        }
+
+        if (auth()->user()->id != $hook->user_id) {
+            return response()->json(["error" => "you can only update your hooks"], 403);
+        }
+
+        $page = (int)$request->get('page') ?? 1;
+        $hookErrors = $this->hookRepository->getHookErrors($hook, 10, $page);
+
+        return HookError::collection($hookErrors);
     }
 }

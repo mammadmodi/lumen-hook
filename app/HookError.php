@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class HookError
  *
  * @package App
+ * @property int $id
  * @property int $status_code
  * @property string $response_body
  * @property int $hook_id
