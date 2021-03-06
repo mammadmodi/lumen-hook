@@ -30,17 +30,29 @@ class HookController extends Controller
     }
 
     /**
-     * Rules for hook requests
+     * Returns rules for hook different type of requests.
      *
+     * @param $method
      * @return array
      */
-    public static function hookRules()
+    public static function hookRules($method)
     {
-        return [
-            'url' => ['required', 'regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'],
-            'cron' => 'required|cron',
-            'threshold' => 'integer|max:10',
-        ];
+        switch ($method) {
+            case "store":
+                return [
+                    'url' => ['required', 'regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'],
+                    'cron' => 'required|cron',
+                    'threshold' => 'integer|max:10',
+                ];
+            case "update":
+                return [
+                    'url' => ['regex:/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/'],
+                    'cron' => 'cron',
+                    'threshold' => 'integer|max:10',
+                ];
+            default:
+                return [];
+        }
     }
 
     /**
@@ -69,7 +81,7 @@ class HookController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, self::hookRules());
+        $this->validate($request, self::hookRules('store'));
 
         $hook = new Hook($request->only(['url', 'cron', 'threshold']));
         $hook->user_id = auth()->user()->id;
@@ -79,5 +91,35 @@ class HookController extends Controller
 
         // TODO schedule cron for hook
         return HookResource::make($hook);
+    }
+
+    /**
+     * Updates an exist hook.
+     *
+     * @param int $id
+     * @param Request $request
+     * @return Response
+     * @throws ValidationException
+     */
+    public function update(int $id, Request $request)
+    {
+        $hook = $this->hookRepository->findById($id);
+        if (empty($hook)) {
+            return response()->json(["error" => "hook not found"], 404);
+        }
+
+        if (auth()->user()->id != $hook->user_id) {
+            return response()->json(["error" => "you can only update your hooks"], 403);
+        }
+
+        $this->validate($request, self::hookRules('update'));
+
+        if (!$hook->update($request->only(['url', 'cron', 'threshold']))) {
+            return response(['message' => 'bad request'], 400);
+        }
+
+        // TODO reschedule cron for updated hook
+
+        return response('', 204);
     }
 }
