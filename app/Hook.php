@@ -27,7 +27,6 @@ class Hook extends Model
     ];
 
     protected $hidden = [
-        'id',
         'user_id',
     ];
 
