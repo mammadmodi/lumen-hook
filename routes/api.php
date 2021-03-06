@@ -18,3 +18,17 @@ $router->group([
     $router->get('refresh', 'AuthController@refresh');
     $router->get('me', 'AuthController@me');
 });
+
+$router->group([
+    'namespace' => 'V1',
+    'prefix' => 'v1',
+    'as' => 'v1.'
+], function (Router $router) {
+    $router->group([
+        'prefix' => 'hooks',
+        'as' => 'hooks.',
+        'middleware' => ['auth:api', 'verify']
+    ], function (Router $router) {
+        $router->get('', ['as' => 'index', 'uses' => 'HookController@index']);
+    });
+});
