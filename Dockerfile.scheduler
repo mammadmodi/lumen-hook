@@ -1,0 +1,19 @@
+FROM php:7.2-fpm
+
+WORKDIR /var/www
+
+RUN apt-get update && apt-get install -y cron
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN docker-php-ext-install pdo_mysql mbstring bcmath
+
+COPY . /var/www
+
+RUN touch /var/log/schedule.log
+RUN chmod 0777 /var/log/schedule.log
+
+ADD .docker/app/scheduler /etc/cron.d/scheduler
+
+RUN crontab /etc/cron.d/scheduler
+CMD printenv > /etc/environment && (cron) && : > /var/log/schedule.log && tail -f /var/log/schedule.log

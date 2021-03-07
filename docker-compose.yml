@@ -1,10 +1,9 @@
 version: '3'
 services:
   api:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-    image: hook:prod
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: php-fpm
     container_name: api
     restart: unless-stopped
@@ -30,7 +29,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: hook:prod
     command: /usr/bin/supervisord
     container_name: worker
     restart: unless-stopped
@@ -46,6 +44,28 @@ services:
       DB_PASSWORD: admin
       QUEUE_CONNECTION: database
       HOOK_TIMEOUT: 10
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - app-network
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.scheduler
+    container_name: scheduler
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: scheduler
+      SERVICE_TAGS: dev
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: hook
+      DB_USERNAME: admin
+      DB_PASSWORD: admin
+      QUEUE_CONNECTION: database
     working_dir: /var/www
     volumes:
       - ./:/var/www
