@@ -92,7 +92,6 @@ class HookController extends Controller
             return response(['message' => 'bad request'], 400);
         }
 
-        // TODO schedule cron for hook
         return HookResource::make($hook);
     }
 
@@ -121,8 +120,6 @@ class HookController extends Controller
             return response(['message' => 'bad request'], 400);
         }
 
-        // TODO reschedule cron for updated hook
-
         return response('', 204);
     }
 
@@ -149,8 +146,6 @@ class HookController extends Controller
         } catch (Exception $exception) {
             return response()->json(["error" => "could not remove hook"], 500);
         }
-
-        // TODO remove hook from scheduler
 
         return response('', 204);
     }
