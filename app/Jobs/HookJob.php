@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Hook;
 use App\HookError;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -10,9 +9,19 @@ use GuzzleHttp\Exception\GuzzleException;
 class HookJob extends Job
 {
     /**
-     * @var Hook $hook
+     * @var string $url
      */
-    private $hook;
+    private $url;
+
+    /**
+     * @var int $hookId
+     */
+    private $hookId;
+
+    /**
+     * @var int threshold
+     */
+    private $threshold;
 
     /**
      * @var integer
@@ -26,11 +35,15 @@ class HookJob extends Job
 
     /**
      * HookJob constructor.
-     * @param Hook $hook
+     * @param string $url
+     * @param int $hookId
+     * @param int $threshold
      */
-    public function __construct(Hook $hook)
+    public function __construct(string $url, int $hookId, int $threshold)
     {
-        $this->hook = $hook;
+        $this->url = $url;
+        $this->hookId = $hookId;
+        $this->threshold = $threshold;
         $this->timeout = config("hook.timeout");
         $this->retryDelay = config("hook.retryDelay");
     }
@@ -44,11 +57,11 @@ class HookJob extends Job
             'timeout' => $this->timeout,
         ]);
 
-        for ($i = 1; $i <= $this->hook->threshold; $i++) {
+        for ($i = 1; $i <= $this->threshold; $i++) {
             try {
-                $response = $httpClient->get($this->hook->url);
+                $response = $httpClient->get($this->url);
             } catch (GuzzleException $exception) {
-                if ($i == $this->hook->threshold) {
+                if ($i == $this->threshold) {
                     $this->reportHookError($exception->getCode(), $exception->getMessage());
 
                     return;
@@ -61,7 +74,7 @@ class HookJob extends Job
                 return;
             }
 
-            if ($i == $this->hook->threshold) {
+            if ($i == $this->threshold) {
                 $this->reportHookError($response->getStatusCode(), $response->getBody());
 
                 return;
@@ -80,7 +93,7 @@ class HookJob extends Job
     private function reportHookError($statusCode, $responseBody)
     {
         $hookError = new HookError();
-        $hookError->hook_id = $this->hook->id;
+        $hookError->hook_id = $this->hookId;
         $hookError->status_code = $statusCode;
         $hookError->response_body = $responseBody;
         $hookError->save();
