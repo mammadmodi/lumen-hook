@@ -25,8 +25,7 @@ services:
     networks:
       - app-network
   worker:
-    image: hook:latest
-    command: /usr/bin/supervisord
+    image: hook:latest-worker
     container_name: worker
     restart: unless-stopped
     tty: true
