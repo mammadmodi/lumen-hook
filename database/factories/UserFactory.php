@@ -1,8 +1,9 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+/** @var Factory $factory */
 
 use App\User;
+use Illuminate\Database\Eloquent\Factory;
 use Faker\Generator as Faker;
 
 /*
@@ -19,6 +20,9 @@ use Faker\Generator as Faker;
 $factory->define(User::class, function (Faker $faker) {
     return [
         'name' => $faker->name,
-        'email' => $faker->email,
+        'email' => $faker->unique()->safeEmail,
+        'phone_number' => "0912" . mt_rand(1000000, 9999999),
+        'status' => User::STATUS_VERIFIED,
+        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
     ];
 });
