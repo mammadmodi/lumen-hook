@@ -50,7 +50,8 @@ class AuthController extends Controller
 
         $user = new User($request->only(["name", "email", "phone_number"]));
         $user->password = Hash::make($request->input("password"));
-        $user->activation_code = mt_rand(1000, 9999);
+        // TODO $user->activation_code = mt_rand(1000, 9999);
+        $user->activation_code = mt_rand(1111);
 
         if (!$user->save()) {
             return response()->json(['error' => 'user exist already'], 400);
