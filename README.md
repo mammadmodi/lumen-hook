@@ -1,24 +1,43 @@
-# Lumen PHP Framework
+# LumenHook
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+This is a sample project developed by lumen framework to schedule web hooks through http apis.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## Application Parts
 
-## Official Documentation
+This application has three different roles:
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+1. Api
+2. Worker
+3. Scheduler
 
-## Contributing
+### Api
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Api serves an http api in specified port.
+you can see full documentation of available api's in [Swagger](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/mammadmodi/lumen-hook/main/1.0.0-swagger.yaml) file.
 
-## Security Vulnerabilities
+You can simply setup an api server in port 8000 through following command:
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+`php -S localhost:8000 -t public`
 
-## License
+### Worker
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This application uses queue to run web hooks, so we need to set up a queue tu process web hook jobs: 
+
+`php artisan queue:listen --queue=hooks`
+
+### Scheduler
+
+The last part is scheduler, you can schedule a hook by performing a POST request to ``http://localhost:8000/v1/hooks``
+api, internally this stores a hook object with it's cron pattern in database, and after that we use [Laravel's task scheduler](https://laravel.com/docs/8.x/scheduling) 
+to schedule hooks.
+
+For this we need one cron job in our system to be ran in every minute:
+
+`* * * * * su -c '/usr/local/bin/php /path/to/project/artisan schedule:run >> /var/log/schedule.log 2>&1'`
+
+
+## Setup with docker compose
+
+Simply you can use Docker to run all of the things, for this you should do only following command:
+
+`make up`
