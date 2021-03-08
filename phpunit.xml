@@ -16,6 +16,10 @@
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>
-        <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="QUEUE_CONNECTION" value="database"/>
+        <env name="DB_DATABASE" value="hook"/>
+        <env name="DB_USERNAME" value="admin"/>
+        <env name="DB_PASSWORD" value="admin"/>
+        <env name="JWT_SECRET" value="f5vx7U0mojw7r6L3JzlKwGhjFT5tyA5Sz01RGejw3pQwmXYVzBbkPYz2cqEzA3VP"/>
     </php>
 </phpunit>

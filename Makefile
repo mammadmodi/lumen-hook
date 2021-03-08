@@ -25,3 +25,6 @@ up: down build-images
 
 down:
 	docker-compose down
+
+unit-test: up
+	php -d memory_limit=1G vendor/bin/phpunit --stop-on-error
