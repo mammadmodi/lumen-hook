@@ -1,10 +1,9 @@
 version: '3'
 services:
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: php-fpm
+    image: hook:latest
+    command:
+      - php-fpm
     container_name: api
     restart: unless-stopped
     tty: true
@@ -26,9 +25,7 @@ services:
     networks:
       - app-network
   worker:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: hook:latest
     command: /usr/bin/supervisord
     container_name: worker
     restart: unless-stopped
@@ -50,9 +47,7 @@ services:
     networks:
       - app-network
   scheduler:
-    build:
-      context: .
-      dockerfile: Dockerfile.scheduler
+    image: hook:latest-scheduler
     container_name: scheduler
     restart: unless-stopped
     tty: true
