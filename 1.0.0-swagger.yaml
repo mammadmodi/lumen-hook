@@ -1,0 +1,425 @@
+openapi: 3.0.1
+info:
+  title: Hook
+  contact:
+    email: mammadmodi@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: /
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Registers a user
+      operationId: register
+      requestBody:
+        description: User object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+        required: true
+      responses:
+        200:
+          description: Successfully registered
+          content: {}
+        400:
+          description: Bad request
+          content: {}
+      x-codegen-request-body-name: body
+  /auth/verify:
+    patch:
+      tags:
+        - auth
+      summary: Verifies a user
+      operationId: verify
+      requestBody:
+        description: Verificaition object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Verification'
+        required: true
+      responses:
+        200:
+          description: Successfully verified
+          content: {}
+        400:
+          description: Bad request
+          content: {}
+        401:
+          description: Verification code is not valid
+          content: {}
+        404:
+          description: User not found
+          content: {}
+      x-codegen-request-body-name: body
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Provides a jwt token for user
+      operationId: login
+      requestBody:
+        description: Credentials object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        401:
+          description: Invalid user or password
+          content: {}
+      x-codegen-request-body-name: body
+  /auth/logout:
+    get:
+      tags:
+        - auth
+      summary: Logs out a user(adds token to black list).
+      operationId: logout
+      responses:
+        200:
+          description: Token removed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenLogoutResponse'
+        401:
+          description: Invalid token
+          content: {}
+      security:
+        - BearerAuth: []
+  /auth/refresh:
+    get:
+      tags:
+        - auth
+      summary: Provides a new token
+      operationId: refresh
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        401:
+          description: Invalid Token
+          content: {}
+      security:
+        - BearerAuth: []
+  /auth/me:
+    get:
+      tags:
+        - auth
+      summary: Returns user profile
+      operationId: me
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        401:
+          description: Invalid Token
+          content: {}
+      security:
+        - BearerAuth: []
+  /v1/hooks:
+    get:
+      tags:
+        - hooks
+      summary: Returns all hooks for logged in user
+      operationId: index
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HookResponse'
+        400:
+          description: Invalid tag value
+          content: {}
+        401:
+          description: Invalid token
+          content: {}
+      security:
+        - BearerAuth: []
+    post:
+      tags:
+        - hooks
+      summary: Stores a hook for logged in user
+      operationId: store
+      requestBody:
+        description: User object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HookRequest'
+        required: true
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HookResponse'
+        400:
+          description: Invalid hook request
+          content: {}
+        401:
+          description: Invalid token
+          content: {}
+      security:
+        - BearerAuth: []
+      x-codegen-request-body-name: body
+  /v1/hooks/{hookId}:
+    delete:
+      tags:
+        - hooks
+      summary: Deletes a hook
+      operationId: delete
+      parameters:
+        - name: hookId
+          in: path
+          description: ID of hook to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Successfull operation
+          content: {}
+        401:
+          description: Invalid token
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+      security:
+        - BearerAuth: []
+    patch:
+      tags:
+        - hooks
+      summary: Updates an existense hook
+      operationId: update
+      parameters:
+        - name: hookId
+          in: path
+          description: ID of hook to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HookRequest'
+        required: false
+      responses:
+        204:
+          description: Successful operation
+          content: {}
+        400:
+          description: Invalid hook request
+          content: {}
+        401:
+          description: Invalid token
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+      security:
+        - BearerAuth: []
+      x-codegen-request-body-name: body
+  /v1/hooks/{hookId}/errors:
+    get:
+      tags:
+        - hooks
+      summary: Gets errors of a hook
+      operationId: errors
+      parameters:
+        - name: hookId
+          in: path
+          description: ID of hook to search
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Successful operation
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HookError'
+        401:
+          description: Invalid token
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+      security:
+        - BearerAuth: []
+  /v1/hooks/{hookId}/errors/{hookErrorId}:
+    delete:
+      tags:
+        - hooks
+      summary: Deletes a hook error
+      operationId: deleteError
+      parameters:
+        - name: hookId
+          in: path
+          description: ID of related hook
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: hookErrorId
+          in: path
+          description: ID of hook error to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Hook error deleted successfully
+          content: {}
+        401:
+          description: Invalid token
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+      security:
+        - BearerAuth: []
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    UserRegistration:
+      type: "object"
+      properties:
+        phone_number:
+          type: "string"
+          description: "start with 09"
+        name:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        password:
+          type: "string"
+    Verification:
+      required:
+        - "phone_number"
+        - "activation_code"
+      type: "object"
+      properties:
+        phone_number:
+          type: "integer"
+          description: "start with 09"
+        activation_code:
+          type: "integer"
+    Credentials:
+      type: "object"
+      required:
+        - "email"
+        - "password"
+      properties:
+        email:
+          type: "string"
+          format: "email"
+        password:
+          type: "string"
+    TokenResponse:
+      type: "object"
+      properties:
+        access_token:
+          type: "string"
+        token_type:
+          type: "string"
+        expires_in:
+          type: "integer"
+          format: "timestamp"
+    TokenLogoutResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+    UserProfile:
+      type: "object"
+      properties:
+        phone_number:
+          type: "string"
+          description: "start with 09"
+        name:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        created_at:
+          type: "string"
+    HookResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        url:
+          type: "string"
+        cron:
+          type: "string"
+        threshold:
+          type: "integer"
+        created_at:
+          type: "string"
+        updated_at:
+          type: "string"
+    HookRequest:
+      type: "object"
+      properties:
+        url:
+          type: "string"
+        cron:
+          type: "string"
+        threshold:
+          type: "integer"
+    HookError:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        hook_id:
+          type: "integer"
+        status_code:
+          type: "integer"
+          format: "int32"
+        response_body:
+          type: "string"
+        created_at:
+          type: "string"
+        updated_at:
+          type: "string"
