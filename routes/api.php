@@ -3,10 +3,6 @@
 use Laravel\Lumen\Routing\Router;
 
 /** @var Router $router */
-$router->get('/', function () {
-    return "Welcome to HOOK";
-});
-
 $router->group([
     'prefix' => 'auth',
     'as' => 'auth.',
