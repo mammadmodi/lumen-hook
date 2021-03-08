@@ -5,7 +5,6 @@ use Laravel\Lumen\Routing\Router;
 /** @var Router $router */
 $router->group([
     'prefix' => 'auth',
-    'as' => 'auth.',
 ], function (Router $router) {
     $router->post('register', 'AuthController@register');
     $router->patch('verify', 'AuthController@verify');
