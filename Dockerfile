@@ -18,6 +18,8 @@ COPY . /var/www
 
 COPY ./.docker/supervisor/supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 
+RUN chown -R www-data:www-data /var/www
+
 EXPOSE 9000
 
 CMD ["php-fpm"]
