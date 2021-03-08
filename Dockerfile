@@ -19,3 +19,5 @@ COPY . /var/www
 COPY ./.docker/supervisor/supervisor.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 9000
+
+CMD ["php-fpm"]
