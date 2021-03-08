@@ -20,6 +20,7 @@ class User extends JsonResource
         return [
             'name' => $user->name,
             'email' => $user->email,
+            'phone_number' => $user->phone_number,
             'created_at' => $user->created_at
         ];
     }
