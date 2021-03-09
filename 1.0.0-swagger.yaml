@@ -340,7 +340,7 @@ components:
       type: "object"
       properties:
         phone_number:
-          type: "integer"
+          type: "string"
           description: "start with 09"
         activation_code:
           type: "integer"

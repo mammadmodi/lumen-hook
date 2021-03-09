@@ -17,6 +17,7 @@ class UsersTableSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@depart.com',
             'phone_number' => '09121234567',
+            'activation_code' => '1111',
             'password' => Hash::make("123465"),
         ]);
     }
