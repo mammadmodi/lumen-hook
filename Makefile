@@ -1,15 +1,17 @@
+IMAGE_FLAG := $(shell git rev-parse --abbrev-ref HEAD) #get image flag from current branch name.
+
 prepare:
 	composer install
 
 build-images: prepare
-	@echo "building application docker image"
-	docker build -t hook:latest -f Dockerfile .
+	@echo "building application docker image ${IMAGE_FLAG}"
+	docker build -t hook:${IMAGE_FLAG} -f Dockerfile .
 	@echo "application docker image has been built successfully"
 	@echo "building scheduler docker image"
-	docker build -t hook:latest-scheduler -f Dockerfile.scheduler .
+	docker build -t hook:${IMAGE_FLAG}-scheduler -f Dockerfile.scheduler .
 	@echo "scheduler docker image has been built successfully"
 	@echo "building worker docker image"
-	docker build -t hook:latest-worker -f Dockerfile.worker .
+	docker build -t hook:${IMAGE_FLAG}-worker -f Dockerfile.worker .
 	@echo "scheduler docker image has been built successfully"
 
 up: down build-images

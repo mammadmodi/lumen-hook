@@ -1,7 +1,7 @@
 version: '3'
 services:
   api:
-    image: hook:latest
+    image: hook:main
     command:
       - php-fpm
     container_name: api
@@ -25,7 +25,7 @@ services:
     networks:
       - app-network
   worker:
-    image: hook:latest-worker
+    image: hook:main-worker
     container_name: worker
     restart: unless-stopped
     tty: true
@@ -46,7 +46,7 @@ services:
     networks:
       - app-network
   scheduler:
-    image: hook:latest-scheduler
+    image: hook:main-scheduler
     container_name: scheduler
     restart: unless-stopped
     tty: true
