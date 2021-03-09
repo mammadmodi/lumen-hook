@@ -71,8 +71,6 @@ services:
     ports:
       - "3306:3306"
     command: --default-authentication-plugin=mysql_native_password
-    env_file:
-      - /etc/hook/.env.mysql
     environment:
       MYSQL_DATABASE: hook
       SERVICE_TAGS: dev
